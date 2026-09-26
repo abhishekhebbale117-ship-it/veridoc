@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VeriDoc - Admin Portal</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #123c69;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        header h1 {
+            font-size: 27px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h2 {
+            color: #123c69;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        .flash {
+            background: #eaf8ef;
+            border: 1px solid #b7e4c7;
+            color: #176b3a;
+            padding: 14px 17px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .submission {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+        }
+
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e4e7ec;
+        }
+
+        .student-name {
+            color: #123c69;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .student-info {
+            color: #667085;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .student-info strong {
+            color: #344054;
+        }
+
+        .overall-status {
+            padding: 9px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pending {
+            background: #fff8e6;
+            color: #8a5a00;
+        }
+
+        .approved {
+            background: #eaf8ef;
+            color: #176b3a;
+        }
+
+        .rejected {
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        .section-title {
+            color: #123c69;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .documents {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .document {
+            background: #f8fafc;
+            border: 1px solid #e4e7ec;
+            border-radius: 13px;
+            padding: 17px;
+        }
+
+        .document-name {
+            color: #123c69;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        .document-status {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        .document-status.pending {
+            color: #8a5a00;
+            background: transparent;
+        }
+
+        .document-status.approved {
+            color: #176b3a;
+            background: transparent;
+        }
+
+        .document-status.rejected {
+            color: #b42318;
+            background: transparent;
+        }
+
+        .document-file {
+            color: #667085;
+            font-size: 12px;
+            word-break: break-word;
+            margin-bottom: 10px;
+        }
+
+        .view-document {
+            color: #123c69;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .view-document:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            border-top: 1px solid #e4e7ec;
+            padding-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .submitted {
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .approve-button {
+            border: none;
+            background: #176b3a;
+            color: white;
+            padding: 13px 24px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .approve-button:hover {
+            background: #12572f;
+        }
+
+        .reject-button {
+            border: none;
+            background: #b42318;
+            color: white;
+            padding: 13px 24px;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .reject-button:hover {
+            background: #941d14;
+        }
+
+        .approved-message {
+            color: #176b3a;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .rejected-message {
+            color: #b42318;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 18px;
+            padding: 60px 30px;
+            text-align: center;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            color: #123c69;
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #667085;
+        }
+
+        @media (max-width: 750px) {
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .student-header {
+                flex-direction: column;
+            }
+
+            .documents {
+                grid-template-columns: 1fr;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+            .approve-button,
+            .reject-button {
+                flex: 1;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>VeriDoc Admin Portal</h1>
+
+    <div class="header-right">
+
+        <span class="admin-label">
+            College Administrator
+        </span>
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout"
+        >
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+
+    <div class="page-title">
+
+        <h2>
+            Student Admission Submissions
+        </h2>
+
+        <p>
+            Review student information and uploaded
+            admission documents.
+        </p>
+
+    </div>
+
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash">
+                    ✅ {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    {% if submissions %}
+
+
+        {% for submission in submissions %}
+
+
+            <div class="submission">
+
+
+                <div class="student-header">
+
+
+                    <div>
+
+                        <div class="student-name">
+                            {{ submission.full_name }}
+                        </div>
+
+
+                        <div class="student-info">
+
+                            <strong>
+                                Name as per 10th / SSLC:
+                            </strong>
+
+                            {{ submission.full_name }}
+
+                            <br>
+
+                            <strong>
+                                Date of Birth:
+                            </strong>
+
+                            {{ submission.dob }}
+
+                            <br>
+
+                            <strong>
+                                12th / PUC Register Number:
+                            </strong>
+
+                            {{ submission.roll_number }}
+
+                            <br>
+
+                            <strong>
+                                Passing Year:
+                            </strong>
+
+                            {{ submission.passing_year }}
+
+                            <br>
+
+                            <strong>
+                                Board:
+                            </strong>
+
+                            {{ submission.board }}
+
+                        </div>
+
+                    </div>
+
+
+                    {% if submission.approval_status == "APPROVED" %}
+
+                        <span class="overall-status approved">
+                            ✓ APPROVED
+                        </span>
+
+                    {% elif submission.approval_status == "REJECTED" %}
+
+                        <span class="overall-status rejected">
+                            ✕ NOT APPROVED
+                        </span>
+
+                    {% else %}
+
+                        <span class="overall-status pending">
+                            ⏳ PENDING APPROVAL
+                        </span>
+
+                    {% endif %}
+
+
+                </div>
+
+
+                <h3 class="section-title">
+                    Uploaded Admission Documents
+                </h3>
+
+
+                <div class="documents">
+
+
+                    {% for document in submission.documents %}
+
+
+                        <div class="document">
+
+
+                            <div class="document-name">
+                                {{ document.certificate_type }}
+                            </div>
+
+
+                            {% if document.approval_status == "APPROVED" %}
+
+                                <div class="document-status approved">
+                                    ✓ APPROVED
+                                </div>
+
+                            {% elif document.approval_status == "REJECTED" %}
+
+                                <div class="document-status rejected">
+                                    ✕ NOT APPROVED
+                                </div>
+
+                            {% else %}
+
+                                <div class="document-status pending">
+                                    ⏳ WAITING FOR APPROVAL
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="document-file">
+                                {{ document.filename }}
+                            </div>
+
+
+                            <a
+                                href="{{ url_for('uploaded_file', filename=document.filename) }}"
+                                target="_blank"
+                                class="view-document"
+                            >
+                                View Document →
+                            </a>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+                <div class="footer">
+
+
+                    <div class="submitted">
+
+                        Submitted:
+                        {{ submission.created_at }}
+
+                    </div>
+
+
+                    {% if submission.approval_status == "PENDING" %}
+
+
+                        <div class="actions">
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('approve_request', request_id=submission.primary_id) }}"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="approve-button"
+                                    onclick="return confirm('Approve this student and all submitted documents?');"
+                                >
+                                    ✓ Approve Student
+                                </button>
+
+                            </form>
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('reject_request', request_id=submission.primary_id) }}"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="reject-button"
+                                    onclick="return confirm('Are you sure you want to reject this submission?');"
+                                >
+                                    ✕ Not Approve
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+
+                    {% elif submission.approval_status == "APPROVED" %}
+
+
+                        <div class="approved-message">
+                            ✓ Student approved successfully
+                        </div>
+
+
+                    {% else %}
+
+
+                        <div class="rejected-message">
+                            ✕ Student submission not approved
+                        </div>
+
+
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                📂
+            </div>
+
+            <h3>
+                No Student Submissions Yet
+            </h3>
+
+            <p>
+                Students who upload their admission
+                documents will appear here.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+veridoc.db
+uploads/
+__pycache__/
+.venv/
+venv/
+.env

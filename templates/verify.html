@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VeriDoc - Admission Document Verification</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+
+        header {
+            background: #123c69;
+            color: white;
+            padding: 20px 8%;
+            animation: headerDrop 0.7s ease-out;
+        }
+
+        header h1 {
+            font-size: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            max-width: 900px;
+            margin: 45px auto;
+            padding: 20px;
+            animation: fadeUp 0.9s ease-out;
+        }
+
+        /* CARD */
+
+        .card {
+            background: white;
+            padding: 42px;
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.08);
+
+            animation: cardAppear 0.9s ease-out 0.15s both;
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.11);
+        }
+
+        /* TITLE */
+
+        h2 {
+            color: #123c69;
+            margin-bottom: 10px;
+            font-size: 28px;
+
+            animation:
+                fadeUp 0.8s ease-out 0.25s both;
+        }
+
+        .subtitle {
+            color: #667085;
+            margin-bottom: 30px;
+            line-height: 1.6;
+
+            animation:
+                fadeUp 0.8s ease-out 0.35s both;
+        }
+
+        /* ERROR */
+
+        .error {
+            background: #fff0f0;
+            color: #b42318;
+            padding: 14px;
+            border-radius: 9px;
+            margin-bottom: 25px;
+
+            animation:
+                shake 0.4s ease;
+        }
+
+        /* SECTION */
+
+        .section {
+            margin-bottom: 32px;
+
+            animation:
+                fadeUp 0.8s ease-out both;
+        }
+
+        .section h3 {
+            color: #123c69;
+            margin-bottom: 18px;
+            font-size: 19px;
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* GRID */
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field {
+            margin-bottom: 5px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        /* LABEL */
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #344054;
+        }
+
+        /* INPUT */
+
+        input {
+            width: 100%;
+            padding: 13px;
+
+            border: 1px solid #d0d5dd;
+            border-radius: 9px;
+
+            font-size: 15px;
+            background: white;
+
+            transition:
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                transform 0.2s ease;
+        }
+
+        input:hover {
+            border-color: #98a2b3;
+        }
+
+        input:focus {
+            outline: none;
+
+            border-color: #123c69;
+
+            box-shadow:
+                0 0 0 4px rgba(18, 60, 105, 0.10);
+
+            transform: translateY(-1px);
+        }
+
+        /* DOCUMENT GRID */
+
+        .document-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 18px;
+        }
+
+        /* DOCUMENT BOX */
+
+        .document-box {
+            background: #eef5ff;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            border: 1px solid #d7e7ff;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .document-box:hover {
+            transform: translateY(-3px);
+
+            border-color: #b9d5f5;
+
+            box-shadow:
+                0 8px 22px rgba(18, 60, 105, 0.08);
+        }
+
+        .document-box h4 {
+            color: #123c69;
+
+            font-size: 16px;
+
+            margin-bottom: 8px;
+        }
+
+        .document-box p {
+            color: #667085;
+
+            font-size: 13px;
+
+            margin-bottom: 14px;
+
+            line-height: 1.5;
+        }
+
+        .document-box input {
+            background: white;
+            cursor: pointer;
+        }
+
+        /* REQUIRED TAG */
+
+        .required {
+            display: inline-block;
+
+            font-size: 11px;
+
+            background: #123c69;
+            color: white;
+
+            padding: 4px 8px;
+
+            border-radius: 20px;
+
+            margin-bottom: 10px;
+        }
+
+        /* SUBMIT BUTTON */
+
+        .button {
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #123c69;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 8px;
+
+            position: relative;
+            overflow: hidden;
+
+            transition:
+                transform 0.2s ease,
+                background 0.25s ease,
+                box-shadow 0.25s ease;
+
+            animation:
+                fadeUp 0.8s ease-out 0.8s both;
+        }
+
+        .button::after {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: -100%;
+
+            width: 100%;
+            height: 100%;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            transition:
+                left 0.35s ease;
+        }
+
+        .button:hover {
+            background: #0d2f52;
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 20px rgba(18, 60, 105, 0.25);
+        }
+
+        .button:hover::after {
+            left: 100%;
+        }
+
+        .button:active {
+            transform: scale(0.97);
+        }
+
+        /* INFO */
+
+        .info {
+            margin-top: 22px;
+
+            padding: 16px;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            color: #667085;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            border-left:
+                4px solid #123c69;
+
+            animation:
+                fadeIn 0.9s ease-out 0.95s both;
+        }
+
+        .info strong {
+            color: #344054;
+        }
+
+        /* ANIMATIONS */
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(35px)
+                    scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
+        }
+
+        @keyframes headerDrop {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0);
+            }
+
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+
+        }
+
+        @keyframes shake {
+
+            0% {
+                transform:
+                    translateX(0);
+            }
+
+            25% {
+                transform:
+                    translateX(-5px);
+            }
+
+            50% {
+                transform:
+                    translateX(5px);
+            }
+
+            75% {
+                transform:
+                    translateX(-3px);
+            }
+
+            100% {
+                transform:
+                    translateX(0);
+            }
+
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            header {
+                padding:
+                    18px 6%;
+            }
+
+            header h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                margin:
+                    30px auto;
+
+                padding:
+                    15px;
+            }
+
+            .card {
+                padding:
+                    28px 20px;
+            }
+
+            h2 {
+                font-size: 25px;
+            }
+
+            .grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .field.full {
+                grid-column:
+                    auto;
+            }
+
+            .document-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .document-box {
+                padding:
+                    18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>
+        VeriDoc
+    </h1>
+
+</header>
+
+
+<div class="container">
+
+    <div class="card">
+
+        <h2>
+            Admission Document Verification
+        </h2>
+
+        <p class="subtitle">
+            Enter the student's information and upload
+            all required admission documents for verification.
+        </p>
+
+
+        {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <!-- STUDENT INFORMATION -->
+
+            <div class="section">
+
+                <h3>
+                    👤 Student Information
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field full">
+
+                        <label>
+    Name as per 10th / SSLC Marks Card
+</label>
+
+<input
+    type="text"
+    name="full_name"
+    placeholder="Enter name exactly as printed on 10th / SSLC marks card"
+    required
+>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Date of Birth
+                        </label>
+
+                        <input
+                            type="date"
+                            name="dob"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                       <label>
+    12th / PUC Register Number
+</label>
+
+<input
+    type="text"
+    name="roll_number"
+    placeholder="Enter register number from 12th / PUC marks card"
+    required
+>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DOCUMENTS -->
+
+            <div class="section">
+
+                <h3>
+                    📄 Required Admission Documents
+                </h3>
+
+                <div class="document-grid">
+
+
+                    <!-- 10th -->
+
+                    <div class="document-box">
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+                        <h4>
+                            10th / SSLC Certificate
+                        </h4>
+
+                        <p>
+                            Upload the student's 10th or
+                            SSLC certificate.
+                        </p>
+
+                        <input
+                            type="file"
+                            name="document_sslc"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- 12th -->
+
+                    <div class="document-box">
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+                        <h4>
+                            12th / PUC Certificate
+                        </h4>
+
+                        <p>
+                            Upload the student's 12th or
+                            PUC certificate.
+                        </p>
+
+                        <input
+                            type="file"
+                            name="document_puc"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- TRANSFER -->
+
+                    <div class="document-box">
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+                        <h4>
+                            Transfer Certificate
+                        </h4>
+
+                        <p>
+                            Upload the student's transfer
+                            certificate.
+                        </p>
+
+                        <input
+                            type="file"
+                            name="document_transfer"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- MIGRATION -->
+
+                    <div class="document-box">
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+                        <h4>
+                            Migration Certificate
+                        </h4>
+
+                        <p>
+                            Upload the migration certificate
+                            when applicable.
+                        </p>
+
+                        <input
+                            type="file"
+                            name="document_migration"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- CASTE -->
+
+                    <div class="document-box">
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+                        <h4>
+                            Caste Certificate
+                        </h4>
+
+                        <p>
+                            Upload the caste certificate
+                            when applicable.
+                        </p>
+
+                        <input
+                            type="file"
+                            name="document_caste"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- INCOME -->
+
+                    <div class="document-box">
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+                        <h4>
+                            Income Certificate
+                        </h4>
+
+                        <p>
+                            Upload the income certificate
+                            when applicable.
+                        </p>
+
+                        <input
+                            type="file"
+                            name="document_income"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- OTHER -->
+
+                    <div
+                        class="document-box"
+                        style="grid-column: 1 / -1;"
+                    >
+
+                        <span class="required">
+                            REQUIRED
+                        </span>
+
+
+            <!-- BUTTON -->
+
+            <button
+                class="button"
+                type="submit"
+            >
+                Verify All Documents
+            </button>
+
+
+            <!-- INFORMATION -->
+
+            <div class="info">
+
+                <strong>
+                    Important:
+                </strong>
+
+                This current local version checks the
+                submitted student details against the
+                college's trusted records.
+
+                It is not yet a live DigiLocker verification.
+
+                Real DigiLocker verification will require
+                the college's official DigiLocker/API Setu
+                authorization and integration.
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

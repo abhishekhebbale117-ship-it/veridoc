@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VeriDoc - DigiLocker Authorization</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #123c69;
+            color: white;
+            padding: 20px 8%;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 70px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .icon {
+            font-size: 55px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #123c69;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #667085;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .document {
+            background: #eef5ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .authorize {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #123c69;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .authorize:hover {
+            background: #0d2f52;
+        }
+
+        .warning {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>VeriDoc</h1>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="icon">🔐</div>
+
+        <h2>DigiLocker Authorization</h2>
+
+        <p>
+            VeriDoc requires your consent to compare the uploaded
+            document with an authorized digital record.
+        </p>
+
+        <div class="document">
+            <strong>Uploaded Document</strong>
+            <br>
+            {{ filename }}
+        </div>
+
+        <form action="/authorize" method="POST">
+
+            <button class="authorize" type="submit">
+                Authorize & Continue
+            </button>
+
+        </form>
+
+        <p class="warning">
+            Demo environment: DigiLocker authorization is simulated
+            for this college project.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
