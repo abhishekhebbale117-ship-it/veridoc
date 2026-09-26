@@ -64,13 +64,18 @@ def get_db():
 # ============================================================
 
 def ensure_column(db, table_name, column_name, column_definition):
+
     columns = db.execute(
         f"PRAGMA table_info({table_name})"
     ).fetchall()
 
-    existing_columns = [column["name"] for column in columns]
+    existing_columns = [
+        column["name"]
+        for column in columns
+    ]
 
     if column_name not in existing_columns:
+
         db.execute(
             f"ALTER TABLE {table_name} ADD COLUMN "
             f"{column_name} {column_definition}"
@@ -88,6 +93,7 @@ def init_database():
     # --------------------------------------------------------
     # USERS TABLE
     # --------------------------------------------------------
+
     db.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,8 +106,8 @@ def init_database():
 
     # --------------------------------------------------------
     # TRUSTED RECORDS TABLE
-    # Kept for compatibility with earlier versions.
     # --------------------------------------------------------
+
     db.execute("""
         CREATE TABLE IF NOT EXISTS trusted_records (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,6 +125,7 @@ def init_database():
     # --------------------------------------------------------
     # VERIFICATION REQUESTS TABLE
     # --------------------------------------------------------
+
     db.execute("""
         CREATE TABLE IF NOT EXISTS verification_requests (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,6 +147,7 @@ def init_database():
     # --------------------------------------------------------
     # ADD NEW COLUMNS TO OLD DATABASES
     # --------------------------------------------------------
+
     ensure_column(
         db,
         "verification_requests",
@@ -171,6 +179,7 @@ def init_database():
     # --------------------------------------------------------
     # OLD RECORDS -> PENDING
     # --------------------------------------------------------
+
     db.execute("""
         UPDATE verification_requests
         SET approval_status = 'PENDING'
@@ -181,6 +190,7 @@ def init_database():
     # --------------------------------------------------------
     # GIVE OLD RECORDS A BATCH ID
     # --------------------------------------------------------
+
     old_rows = db.execute("""
         SELECT id, user_id
         FROM verification_requests
@@ -217,11 +227,14 @@ def init_database():
     # --------------------------------------------------------
     # CREATE DEFAULT ADMIN
     # --------------------------------------------------------
+
     admin = db.execute("""
         SELECT id
         FROM users
         WHERE email = ?
-    """, ("admin@veridoc.local",)).fetchone()
+    """, (
+        "admin@veridoc.local",
+    )).fetchone()
 
     if not admin:
 
@@ -258,13 +271,28 @@ def register():
 
     if request.method == "POST":
 
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        ).strip()
 
         if not name or not email or not password:
+
             flash("Please fill all fields.")
-            return render_template("register.html")
+
+            return render_template(
+                "register.html"
+            )
 
         db = get_db()
 
@@ -272,14 +300,19 @@ def register():
             SELECT id
             FROM users
             WHERE email = ?
-        """, (email,)).fetchone()
+        """, (
+            email,
+        )).fetchone()
 
         if existing_user:
 
             db.close()
 
             flash("Email already registered.")
-            return render_template("register.html")
+
+            return render_template(
+                "register.html"
+            )
 
         db.execute("""
             INSERT INTO users
@@ -295,11 +328,17 @@ def register():
         db.commit()
         db.close()
 
-        flash("Registration successful. Please login.")
+        flash(
+            "Registration successful. Please login."
+        )
 
-        return redirect(url_for("login"))
+        return redirect(
+            url_for("login")
+        )
 
-    return render_template("register.html")
+    return render_template(
+        "register.html"
+    )
 
 
 # ============================================================
@@ -311,8 +350,15 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "").strip()
+        email = request.form.get(
+            "email",
+            ""
+        ).strip().lower()
+
+        password = request.form.get(
+            "password",
+            ""
+        ).strip()
 
         db = get_db()
 
@@ -330,20 +376,33 @@ def login():
 
         if not user:
 
-            flash("Invalid email or password.")
-            return render_template("login.html")
+            flash(
+                "Invalid email or password."
+            )
+
+            return render_template(
+                "login.html"
+            )
 
         session["user_id"] = user["id"]
         session["user_name"] = user["name"]
         session["user_email"] = user["email"]
 
         if user["email"] == "admin@veridoc.local":
+
             session["admin_id"] = user["id"]
-            return redirect(url_for("admin_dashboard"))
 
-        return redirect(url_for("verify"))
+            return redirect(
+                url_for("admin_dashboard")
+            )
 
-    return render_template("login.html")
+        return redirect(
+            url_for("verify")
+        )
+
+    return render_template(
+        "login.html"
+    )
 
 
 # ============================================================
@@ -355,7 +414,9 @@ def logout():
 
     session.clear()
 
-    return redirect(url_for("home"))
+    return redirect(
+        url_for("home")
+    )
 
 
 # ============================================================
@@ -366,19 +427,35 @@ def logout():
 def verify():
 
     if "user_id" not in session:
-        return redirect(url_for("login"))
 
-    # Prevent administrator from using student verification form
+        return redirect(
+            url_for("login")
+        )
+
+    # Prevent administrator from using student form
     if session.get("user_email") == "admin@veridoc.local":
-        return redirect(url_for("admin_dashboard"))
+
+        return redirect(
+            url_for("admin_dashboard")
+        )
 
     if request.method == "POST":
 
-        full_name = request.form.get("full_name", "").strip()
-        dob = request.form.get("dob", "").strip()
-        roll_number = request.form.get("roll_number", "").strip()
+        full_name = request.form.get(
+            "full_name",
+            ""
+        ).strip()
 
-        # These are retained because the existing database expects them.
+        dob = request.form.get(
+            "dob",
+            ""
+        ).strip()
+
+        roll_number = request.form.get(
+            "roll_number",
+            ""
+        ).strip()
+
         passing_year = request.form.get(
             "passing_year",
             "Not Provided"
@@ -390,12 +467,19 @@ def verify():
         ).strip()
 
         if not full_name or not dob or not roll_number:
-            flash("Please fill all student details.")
-            return render_template("verify.html")
+
+            flash(
+                "Please fill all student details."
+            )
+
+            return render_template(
+                "verify.html"
+            )
 
         # ----------------------------------------------------
-        # CREATE A UNIQUE SUBMISSION BATCH
+        # CREATE UNIQUE BATCH
         # ----------------------------------------------------
+
         batch_id = (
             "VD-"
             + datetime.now().strftime("%Y%m%d%H%M%S")
@@ -408,11 +492,14 @@ def verify():
         uploaded_any = False
 
         # ----------------------------------------------------
-        # SAVE ALL SIX DOCUMENTS
+        # SAVE DOCUMENTS
         # ----------------------------------------------------
+
         for field_name, document_label in ADMISSION_DOCUMENTS:
 
-            file = request.files.get(field_name)
+            file = request.files.get(
+                field_name
+            )
 
             if not file or not file.filename:
                 continue
@@ -421,8 +508,9 @@ def verify():
 
             original_filename = file.filename
 
-            # Make a safe filename
-            safe_filename = os.path.basename(original_filename)
+            safe_filename = os.path.basename(
+                original_filename
+            )
 
             timestamp = datetime.now().strftime(
                 "%Y%m%d%H%M%S%f"
@@ -444,15 +532,21 @@ def verify():
             file.save(file_path)
 
             # ------------------------------------------------
-            # CALCULATE FILE HASH
+            # HASH FILE
             # ------------------------------------------------
+
             sha256 = hashlib.sha256()
 
-            with open(file_path, "rb") as saved_file:
+            with open(
+                file_path,
+                "rb"
+            ) as saved_file:
 
                 while True:
 
-                    chunk = saved_file.read(8192)
+                    chunk = saved_file.read(
+                        8192
+                    )
 
                     if not chunk:
                         break
@@ -462,8 +556,9 @@ def verify():
             file_hash = sha256.hexdigest()
 
             # ------------------------------------------------
-            # SAVE RECORD
+            # SAVE DATABASE RECORD
             # ------------------------------------------------
+
             db.execute("""
                 INSERT INTO verification_requests
                 (
@@ -484,7 +579,10 @@ def verify():
                     approved_at,
                     approved_by
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?, ?
+                )
             """, (
                 session["user_id"],
                 full_name,
@@ -497,7 +595,9 @@ def verify():
                 file_hash,
                 "UPLOADED",
                 None,
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
                 batch_id,
                 "PENDING",
                 None,
@@ -508,8 +608,13 @@ def verify():
 
             db.close()
 
-            flash("Please upload at least one document.")
-            return render_template("verify.html")
+            flash(
+                "Please upload at least one document."
+            )
+
+            return render_template(
+                "verify.html"
+            )
 
         db.commit()
         db.close()
@@ -520,29 +625,40 @@ def verify():
             url_for("admission_result")
         )
 
-    return render_template("verify.html")
+    return render_template(
+        "verify.html"
+    )
 
 
 # ============================================================
-# ADMISSION RESULT / STUDENT STATUS
+# STUDENT RESULT / STATUS
 # ============================================================
 
 @app.route("/result")
 def admission_result():
 
     if "user_id" not in session:
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     if session.get("user_email") == "admin@veridoc.local":
-        return redirect(url_for("admin_dashboard"))
+
+        return redirect(
+            url_for("admin_dashboard")
+        )
 
     db = get_db()
 
-    batch_id = session.get("last_batch_id")
+    batch_id = session.get(
+        "last_batch_id"
+    )
 
     # --------------------------------------------------------
-    # Get latest batch for this student
+    # GET CURRENT BATCH
     # --------------------------------------------------------
+
     if batch_id:
 
         submissions = db.execute("""
@@ -600,13 +716,22 @@ def admission_result():
             for row in submissions
         ]
 
-        if all(status == "APPROVED" for status in statuses):
+        if all(
+            status == "APPROVED"
+            for status in statuses
+        ):
+
             approval_status = "APPROVED"
 
-        elif any(status == "REJECTED" for status in statuses):
+        elif any(
+            status == "REJECTED"
+            for status in statuses
+        ):
+
             approval_status = "REJECTED"
 
         else:
+
             approval_status = "PENDING"
 
     approved_count = sum(
@@ -645,7 +770,10 @@ def admission_result():
 def admin_dashboard():
 
     if "admin_id" not in session:
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     db = get_db()
 
@@ -658,9 +786,9 @@ def admin_dashboard():
     db.close()
 
     # --------------------------------------------------------
-    # GROUP DOCUMENTS BY BATCH ID
-    # Each student submission becomes one card.
+    # GROUP DOCUMENTS BY BATCH
     # --------------------------------------------------------
+
     grouped = {}
 
     for row in rows:
@@ -668,40 +796,67 @@ def admin_dashboard():
         key = row["batch_id"]
 
         if not key:
-            key = "ROW-" + str(row["id"])
+
+            key = (
+                "ROW-"
+                + str(row["id"])
+            )
 
         if key not in grouped:
 
             grouped[key] = {
+
                 "primary_id": row["id"],
+
                 "batch_id": row["batch_id"],
+
                 "user_id": row["user_id"],
+
                 "full_name": row["full_name"],
+
                 "dob": row["dob"],
+
                 "roll_number": row["roll_number"],
+
                 "passing_year": row["passing_year"],
+
                 "board": row["board"],
+
                 "approval_status": row["approval_status"],
+
                 "approved_at": row["approved_at"],
+
                 "approved_by": row["approved_by"],
+
                 "created_at": row["created_at"],
+
                 "documents": []
+
             }
 
         grouped[key]["documents"].append(row)
 
-        # If the current row carries approval information,
-        # use that information for the group.
         if row["approval_status"]:
-            grouped[key]["approval_status"] = row["approval_status"]
+
+            grouped[key][
+                "approval_status"
+            ] = row["approval_status"]
 
         if row["approved_at"]:
-            grouped[key]["approved_at"] = row["approved_at"]
+
+            grouped[key][
+                "approved_at"
+            ] = row["approved_at"]
 
         if row["approved_by"]:
-            grouped[key]["approved_by"] = row["approved_by"]
 
-    submissions = list(grouped.values())
+            grouped[key][
+                "approved_by"
+            ] = row["approved_by"]
+
+    submissions = list(
+        grouped.values()
+    )
 
     return render_template(
         "admin.html",
@@ -720,13 +875,13 @@ def admin_dashboard():
 def approve_request(request_id):
 
     if "admin_id" not in session:
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     db = get_db()
 
-    # --------------------------------------------------------
-    # FIND THE SELECTED DOCUMENT
-    # --------------------------------------------------------
     row = db.execute("""
         SELECT
             id,
@@ -742,7 +897,9 @@ def approve_request(request_id):
 
         db.close()
 
-        flash("Submission not found.")
+        flash(
+            "Submission not found."
+        )
 
         return redirect(
             url_for("admin_dashboard")
@@ -753,8 +910,7 @@ def approve_request(request_id):
     )
 
     # --------------------------------------------------------
-    # IMPORTANT:
-    # Approve the COMPLETE STUDENT SUBMISSION.
+    # APPROVE COMPLETE STUDENT BATCH
     # --------------------------------------------------------
 
     if row["batch_id"]:
@@ -790,7 +946,9 @@ def approve_request(request_id):
     db.commit()
     db.close()
 
-    flash("Student approved successfully.")
+    flash(
+        "Student approved successfully."
+    )
 
     return redirect(
         url_for("admin_dashboard")
@@ -808,7 +966,10 @@ def approve_request(request_id):
 def reject_request(request_id):
 
     if "admin_id" not in session:
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     db = get_db()
 
@@ -827,7 +988,9 @@ def reject_request(request_id):
 
         db.close()
 
-        flash("Submission not found.")
+        flash(
+            "Submission not found."
+        )
 
         return redirect(
             url_for("admin_dashboard")
@@ -839,7 +1002,14 @@ def reject_request(request_id):
     ).strip()
 
     if not reason:
-        reason = "Documents rejected by administrator."
+
+        reason = (
+            "Documents rejected by administrator."
+        )
+
+    # --------------------------------------------------------
+    # REJECT COMPLETE BATCH
+    # --------------------------------------------------------
 
     if row["batch_id"]:
 
@@ -878,7 +1048,9 @@ def reject_request(request_id):
     db.commit()
     db.close()
 
-    flash("Student rejected.")
+    flash(
+        "Student rejected."
+    )
 
     return redirect(
         url_for("admin_dashboard")
@@ -893,7 +1065,10 @@ def reject_request(request_id):
 def uploaded_file(filename):
 
     if "admin_id" not in session:
-        return redirect(url_for("login"))
+
+        return redirect(
+            url_for("login")
+        )
 
     return send_from_directory(
         app.config["UPLOAD_FOLDER"],
@@ -902,16 +1077,21 @@ def uploaded_file(filename):
 
 
 # ============================================================
-# OPTIONAL AUTHORIZE PAGE
+# AUTHORIZE PAGE
 # ============================================================
 
 @app.route("/authorize")
 def authorize():
 
     if "user_id" not in session:
-        return redirect(url_for("login"))
 
-    return render_template("authorize.html")
+        return redirect(
+            url_for("login")
+        )
+
+    return render_template(
+        "authorize.html"
+    )
 
 
 # ============================================================
@@ -920,21 +1100,35 @@ def authorize():
 
 @app.errorhandler(404)
 def page_not_found(error):
+
     return "Page not found.", 404
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
+
     return "Internal server error.", 500
 
 
 # ============================================================
-# START APPLICATION
+# IMPORTANT FOR RENDER / GUNICORN
+# ============================================================
+# This MUST run outside the __main__ block because Render starts
+# the application with:
+#
+# gunicorn app:app
+#
+# In that situation, __name__ is not "__main__".
+# ============================================================
+
+init_database()
+
+
+# ============================================================
+# LOCAL DEVELOPMENT
 # ============================================================
 
 if __name__ == "__main__":
-
-    init_database()
 
     app.run(
         host="0.0.0.0",
