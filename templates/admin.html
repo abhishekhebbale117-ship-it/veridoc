@@ -1,102 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>VeriDoc - Admin Portal</title>
+    <title>VeriDoc | Admin Portal</title>
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
-            min-height: 100vh;
+        :root {
+            --bg: #06101e;
+            --bg2: #0a192d;
+            --card: rgba(255,255,255,0.055);
+            --border: rgba(255,255,255,0.09);
+            --blue: #1683ff;
+            --blue2: #52b0ff;
+            --gold: #d6b36a;
+            --text: #f5f8fc;
+            --muted: #9baec3;
+            --green: #36d399;
+            --red: #ff6868;
+            --yellow: #f3c75f;
         }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 10%, rgba(22,131,255,.13), transparent 28%),
+                radial-gradient(circle at 90% 85%, rgba(214,179,106,.08), transparent 25%),
+                linear-gradient(135deg, #030a13, #07172b 55%, #040c18);
+            overflow-x: hidden;
+        }
+
+        /* ================= HEADER ================= */
 
         header {
-            background: #123c69;
-            color: white;
-            padding: 20px 7%;
+            min-height: 82px;
+            padding: 0 6%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+            justify-content: space-between;
+            gap: 20px;
+
+            background: rgba(3,10,20,.76);
+            backdrop-filter: blur(20px);
+
+            border-bottom: 1px solid rgba(255,255,255,.07);
+
+            position: sticky;
+            top: 0;
+            z-index: 20;
+
+            animation: headerDrop .7s ease;
         }
 
-        header h1 {
-            font-size: 27px;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-mark {
+            width: 45px;
+            height: 45px;
+            border-radius: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: linear-gradient(135deg,#1683ff,#0755b1);
+
+            font-size: 20px;
+            font-weight: 900;
+
+            box-shadow: 0 10px 30px rgba(22,131,255,.25);
+        }
+
+        .brand-name {
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .brand-sub {
+            margin-top: 3px;
+            color: #7f93aa;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
         }
 
-        .admin-label {
-            font-size: 13px;
-            opacity: 0.9;
+        .admin-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 9px 13px;
+
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.04);
+
+            border-radius: 10px;
+
+            color: #b7c7d9;
+            font-size: 11px;
+        }
+
+        .admin-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(54,211,153,.7);
         }
 
         .logout {
-            color: white;
             text-decoration: none;
-            padding: 9px 15px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.12);
+            color: white;
+
+            padding: 10px 17px;
+
+            border-radius: 10px;
+
+            background: rgba(255,255,255,.07);
+            border: 1px solid rgba(255,255,255,.09);
+
+            font-size: 12px;
+            font-weight: bold;
+
+            transition: .25s ease;
         }
 
+        .logout:hover {
+            background: rgba(255,255,255,.13);
+            transform: translateY(-2px);
+        }
+
+        /* ================= MAIN ================= */
+
         .container {
-            max-width: 1150px;
-            margin: 40px auto;
-            padding: 20px;
+            width: min(1180px, 92%);
+            margin: 45px auto 70px;
         }
 
         .page-title {
-            margin-bottom: 25px;
+            margin-bottom: 28px;
+            animation: fadeUp .7s ease;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            color: #8ccaff;
+            background: rgba(22,131,255,.07);
+            border: 1px solid rgba(22,131,255,.2);
+
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+
+            margin-bottom: 15px;
+        }
+
+        .eyebrow span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--blue2);
+            box-shadow: 0 0 10px var(--blue2);
         }
 
         .page-title h2 {
-            color: #123c69;
-            font-size: 30px;
-            margin-bottom: 8px;
+            font-size: clamp(30px,4vw,43px);
+            letter-spacing: -1.5px;
+            margin-bottom: 9px;
+        }
+
+        .page-title h2 span {
+            color: var(--gold);
         }
 
         .page-title p {
-            color: #667085;
-            line-height: 1.6;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
         }
+
+        /* ================= FLASH ================= */
 
         .flash {
-            background: #eaf8ef;
-            border: 1px solid #b7e4c7;
-            color: #176b3a;
-            padding: 14px 17px;
-            border-radius: 10px;
             margin-bottom: 20px;
+
+            padding: 14px 17px;
+
+            border-radius: 12px;
+
+            background: rgba(54,211,153,.09);
+            border: 1px solid rgba(54,211,153,.2);
+
+            color: #83e8bd;
+
+            font-size: 13px;
             font-weight: bold;
+
+            animation: fadeUp .5s ease;
         }
 
+        /* ================= SUBMISSION ================= */
+
         .submission {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
+            position: relative;
+
             margin-bottom: 25px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+            padding: 29px;
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.025)
+                );
+
+            border: 1px solid var(--border);
+
+            box-shadow:
+                0 25px 65px rgba(0,0,0,.25),
+                inset 0 1px 0 rgba(255,255,255,.05);
+
+            backdrop-filter: blur(18px);
+
+            animation: cardAppear .7s ease both;
+
+            overflow: hidden;
+        }
+
+        .submission::before {
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+            height: 240px;
+
+            border-radius: 50%;
+
+            background: rgba(22,131,255,.08);
+
+            filter: blur(75px);
+
+            right: -100px;
+            top: -120px;
+
+            pointer-events: none;
         }
 
         .student-header {
@@ -104,129 +282,187 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 20px;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e4e7ec;
+
+            padding-bottom: 21px;
+            margin-bottom: 22px;
+
+            border-bottom: 1px solid rgba(255,255,255,.08);
         }
 
         .student-name {
-            color: #123c69;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -.4px;
+
+            margin-bottom: 12px;
+
+            color: white;
         }
 
         .student-info {
-            color: #667085;
-            font-size: 13px;
-            line-height: 1.8;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.9;
         }
 
         .student-info strong {
-            color: #344054;
+            color: #d2dce8;
         }
 
+        /* ================= STATUS ================= */
+
         .overall-status {
-            padding: 9px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: bold;
+            padding: 9px 13px;
+
+            border-radius: 999px;
+
+            font-size: 10px;
+            font-weight: 800;
+
             white-space: nowrap;
+
+            letter-spacing: .4px;
         }
 
         .pending {
-            background: #fff8e6;
-            color: #8a5a00;
+            color: var(--yellow);
+            background: rgba(243,199,95,.10);
+            border: 1px solid rgba(243,199,95,.18);
         }
 
         .approved {
-            background: #eaf8ef;
-            color: #176b3a;
+            color: var(--green);
+            background: rgba(54,211,153,.09);
+            border: 1px solid rgba(54,211,153,.18);
         }
 
         .rejected {
-            background: #fff0f0;
-            color: #b42318;
+            color: var(--red);
+            background: rgba(255,104,104,.09);
+            border: 1px solid rgba(255,104,104,.18);
         }
 
+        /* ================= DOCUMENTS ================= */
+
         .section-title {
-            color: #123c69;
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 15px;
+            color: #dfe8f2;
+
+            margin-bottom: 14px;
         }
 
         .documents {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(2,1fr);
+            gap: 13px;
+
+            margin-bottom: 25px;
         }
 
         .document {
-            background: #f8fafc;
-            border: 1px solid #e4e7ec;
-            border-radius: 13px;
             padding: 17px;
+
+            border-radius: 14px;
+
+            background: rgba(3,12,23,.55);
+
+            border: 1px solid rgba(255,255,255,.07);
+
+            transition: .25s ease;
+        }
+
+        .document:hover {
+            transform: translateY(-3px);
+
+            border-color: rgba(22,131,255,.3);
+
+            background: rgba(9,28,49,.7);
+
+            box-shadow: 0 12px 30px rgba(0,0,0,.18);
         }
 
         .document-name {
-            color: #123c69;
-            font-size: 15px;
+            color: #e8f0f8;
+
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 9px;
+
+            margin-bottom: 8px;
         }
 
         .document-status {
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 9px;
+            display: inline-block;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            margin-bottom: 10px;
+
+            letter-spacing: .5px;
         }
 
         .document-status.pending {
-            color: #8a5a00;
+            border: none;
             background: transparent;
+            color: var(--yellow);
         }
 
         .document-status.approved {
-            color: #176b3a;
+            border: none;
             background: transparent;
+            color: var(--green);
         }
 
         .document-status.rejected {
-            color: #b42318;
+            border: none;
             background: transparent;
+            color: var(--red);
         }
 
         .document-file {
-            color: #667085;
-            font-size: 12px;
+            color: #71859b;
+            font-size: 11px;
+
             word-break: break-word;
-            margin-bottom: 10px;
+
+            margin-bottom: 11px;
         }
 
         .view-document {
-            color: #123c69;
+            display: inline-block;
+
+            color: #68b7ff;
+
             text-decoration: none;
-            font-size: 12px;
+
+            font-size: 11px;
             font-weight: bold;
+
+            transition: .2s ease;
         }
 
         .view-document:hover {
-            text-decoration: underline;
+            color: white;
+            transform: translateX(3px);
         }
 
+        /* ================= FOOTER / ACTIONS ================= */
+
         .footer {
-            border-top: 1px solid #e4e7ec;
-            padding-top: 18px;
+            padding-top: 20px;
+
+            border-top: 1px solid rgba(255,255,255,.08);
+
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             gap: 20px;
         }
 
         .submitted {
-            color: #667085;
-            font-size: 12px;
+            color: #73869c;
+            font-size: 11px;
         }
 
         .actions {
@@ -234,76 +470,166 @@
             gap: 10px;
         }
 
-        .approve-button {
+        .approve-button,
+        .reject-button {
             border: none;
-            background: #176b3a;
-            color: white;
-            padding: 13px 24px;
-            border-radius: 9px;
-            font-size: 14px;
+
+            padding: 12px 20px;
+
+            border-radius: 10px;
+
+            font-size: 12px;
             font-weight: bold;
+
             cursor: pointer;
+
+            transition: .25s ease;
+        }
+
+        .approve-button {
+            background: rgba(54,211,153,.13);
+            color: #65e2ad;
+            border: 1px solid rgba(54,211,153,.22);
         }
 
         .approve-button:hover {
-            background: #12572f;
+            background: rgba(54,211,153,.22);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(54,211,153,.12);
         }
 
         .reject-button {
-            border: none;
-            background: #b42318;
-            color: white;
-            padding: 13px 24px;
-            border-radius: 9px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
+            background: rgba(255,104,104,.11);
+            color: #ff8585;
+            border: 1px solid rgba(255,104,104,.20);
         }
 
         .reject-button:hover {
-            background: #941d14;
+            background: rgba(255,104,104,.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,104,104,.10);
         }
 
         .approved-message {
-            color: #176b3a;
+            color: var(--green);
+            font-size: 12px;
             font-weight: bold;
-            font-size: 14px;
         }
 
         .rejected-message {
-            color: #b42318;
+            color: var(--red);
+            font-size: 12px;
             font-weight: bold;
-            font-size: 14px;
         }
 
+        /* ================= EMPTY ================= */
+
         .empty {
-            background: white;
-            border-radius: 18px;
-            padding: 60px 30px;
+            padding: 75px 30px;
+
             text-align: center;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
+
+            border-radius: 22px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.06),
+                    rgba(255,255,255,.025)
+                );
+
+            border: 1px solid var(--border);
+
+            box-shadow: 0 25px 65px rgba(0,0,0,.22);
+
+            animation: fadeUp .7s ease;
         }
 
         .empty-icon {
-            font-size: 55px;
-            margin-bottom: 15px;
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 22px;
+
+            background: rgba(22,131,255,.08);
+            border: 1px solid rgba(22,131,255,.14);
+
+            font-size: 32px;
         }
 
         .empty h3 {
-            color: #123c69;
+            font-size: 20px;
             margin-bottom: 8px;
         }
 
         .empty p {
-            color: #667085;
+            color: var(--muted);
+            font-size: 13px;
         }
+
+        /* ================= ANIMATIONS ================= */
+
+        @keyframes headerDrop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ================= MOBILE ================= */
 
         @media (max-width: 750px) {
 
             header {
+                padding: 16px 5%;
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
+                gap: 14px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .container {
+                width: 92%;
+                margin-top: 30px;
             }
 
             .student-header {
@@ -316,7 +642,7 @@
 
             .footer {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
             }
 
             .actions {
@@ -328,24 +654,61 @@
                 flex: 1;
             }
 
+            .submission {
+                padding: 22px;
+            }
         }
 
+        @media (max-width: 500px) {
+
+            .brand-name {
+                font-size: 18px;
+            }
+
+            .admin-badge {
+                display: none;
+            }
+
+            .page-title h2 {
+                font-size: 30px;
+            }
+
+            .student-name {
+                font-size: 20px;
+            }
+        }
     </style>
-
 </head>
-
 
 <body>
 
 <header>
 
-    <h1>VeriDoc Admin Portal</h1>
+    <div class="brand">
+
+        <div class="brand-mark">
+            V
+        </div>
+
+        <div>
+            <div class="brand-name">
+                VERIDOC
+            </div>
+
+            <div class="brand-sub">
+                JCER Document Verification
+            </div>
+        </div>
+
+    </div>
+
 
     <div class="header-right">
 
-        <span class="admin-label">
+        <div class="admin-badge">
+            <span class="admin-dot"></span>
             College Administrator
-        </span>
+        </div>
 
         <a
             href="{{ url_for('logout') }}"
@@ -361,16 +724,20 @@
 
 <div class="container">
 
-
     <div class="page-title">
 
+        <div class="eyebrow">
+            <span></span>
+            Administration Portal
+        </div>
+
         <h2>
-            Student Admission Submissions
+            Student <span>Submissions</span>
         </h2>
 
         <p>
-            Review student information and uploaded
-            admission documents.
+            Review student information and uploaded admission
+            documents before approving or rejecting submissions.
         </p>
 
     </div>
@@ -383,7 +750,7 @@
             {% for message in messages %}
 
                 <div class="flash">
-                    ✅ {{ message }}
+                    ✓ {{ message }}
                 </div>
 
             {% endfor %}
@@ -398,19 +765,15 @@
 
         {% for submission in submissions %}
 
-
             <div class="submission">
 
-
                 <div class="student-header">
-
 
                     <div>
 
                         <div class="student-name">
                             {{ submission.full_name }}
                         </div>
-
 
                         <div class="student-info">
 
@@ -477,7 +840,6 @@
 
                     {% endif %}
 
-
                 </div>
 
 
@@ -488,12 +850,9 @@
 
                 <div class="documents">
 
-
                     {% for document in submission.documents %}
 
-
                         <div class="document">
-
 
                             <div class="document-name">
                                 {{ document.certificate_type }}
@@ -534,18 +893,14 @@
                                 View Document →
                             </a>
 
-
                         </div>
 
-
                     {% endfor %}
-
 
                 </div>
 
 
                 <div class="footer">
-
 
                     <div class="submitted">
 
@@ -557,9 +912,7 @@
 
                     {% if submission.approval_status == "PENDING" %}
 
-
                         <div class="actions">
-
 
                             <form
                                 method="POST"
@@ -592,12 +945,10 @@
 
                             </form>
 
-
                         </div>
 
 
                     {% elif submission.approval_status == "APPROVED" %}
-
 
                         <div class="approved-message">
                             ✓ Student approved successfully
@@ -606,26 +957,20 @@
 
                     {% else %}
 
-
                         <div class="rejected-message">
                             ✕ Student submission not approved
                         </div>
 
-
                     {% endif %}
-
 
                 </div>
 
-
             </div>
-
 
         {% endfor %}
 
 
     {% else %}
-
 
         <div class="empty">
 
@@ -644,13 +989,9 @@
 
         </div>
 
-
     {% endif %}
-
 
 </div>
 
-
 </body>
-
 </html>

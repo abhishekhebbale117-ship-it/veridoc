@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verify Email | VeriDoc</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #061a3a, #0b3d91);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: white;
+            border-radius: 18px;
+            padding: 40px 35px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        .logo {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0b5ed7, #063b8f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #082b61;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .email {
+            color: #0b5ed7;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        .flash {
+            background: #f1f7ff;
+            color: #084298;
+            border: 1px solid #b6d4fe;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .otp-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #d9e2f2;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 8px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .otp-input:focus {
+            border-color: #0b5ed7;
+            box-shadow: 0 0 0 3px rgba(11, 94, 215, 0.1);
+        }
+
+        .verify-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0b5ed7, #063b8f);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(11, 94, 215, 0.25);
+        }
+
+        .resend-form {
+            margin-top: 18px;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #0b5ed7;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .resend-btn:hover {
+            text-decoration: underline;
+        }
+
+        .expiry {
+            margin-top: 20px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 22px;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            color: #0b5ed7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">V</div>
+
+        <h1>Verify Your Email</h1>
+
+        <p class="subtitle">
+            We have sent a 6-digit verification code to
+            <br>
+            <span class="email">{{ email }}</span>
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('verify_email') }}">
+
+            <input
+                type="text"
+                name="otp"
+                id="otp"
+                class="otp-input"
+                placeholder="000000"
+                maxlength="6"
+                minlength="6"
+                pattern="[0-9]{6}"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                required
+            >
+
+            <button type="submit" class="verify-btn">
+                Verify Email
+            </button>
+
+        </form>
+
+        <form method="POST"
+              action="{{ url_for('resend_otp') }}"
+              class="resend-form">
+
+            <button type="submit" class="resend-btn">
+                Didn't receive the code? Resend OTP
+            </button>
+
+        </form>
+
+        <p class="expiry">
+            OTP expires in 10 minutes.<br>
+            After verification, you can log in normally without an OTP.
+        </p>
+
+        <a href="{{ url_for('login') }}" class="back">
+            ← Back to Login
+        </a>
+
+    </div>
+
+
+    <!-- OTP INPUT FIX -->
+    <script>
+        const otpInput = document.getElementById("otp");
+
+        otpInput.addEventListener("input", function () {
+
+            // Remove anything that is not a number
+            this.value = this.value.replace(/[^0-9]/g, "");
+
+            // Allow exactly 6 digits
+            if (this.value.length > 6) {
+                this.value = this.value.substring(0, 6);
+            }
+        });
+
+        // Also handle paste correctly
+        otpInput.addEventListener("paste", function () {
+
+            setTimeout(() => {
+
+                this.value = this.value
+                    .replace(/[^0-9]/g, "")
+                    .substring(0, 6);
+
+            }, 0);
+        });
+    </script>
+
+</body>
+</html>

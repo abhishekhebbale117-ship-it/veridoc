@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VeriDoc - Register</title>
+    <title>VeriDoc | Create Account</title>
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        :root {
+            --navy: #06152d;
+            --navy-2: #0a2040;
+            --blue: #1683ff;
+            --blue-light: #43a5ff;
+            --gold: #d9b86c;
+            --white: #ffffff;
+            --muted: #9eb0c9;
+            --border: rgba(255,255,255,0.12);
         }
 
         html {
@@ -21,331 +29,623 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
+            font-family: Arial, Helvetica, sans-serif;
             min-height: 100vh;
+            color: var(--white);
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(22,131,255,0.18),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 85% 80%,
+                    rgba(217,184,108,0.10),
+                    transparent 28%
+                ),
+                linear-gradient(
+                    135deg,
+                    #030b19,
+                    #071a35 55%,
+                    #041124
+                );
+
             overflow-x: hidden;
         }
 
-
-        /* ---------------- HEADER ---------------- */
-
-        header {
-            background: #123c69;
-            color: white;
-            padding: 20px 8%;
-
-            animation: headerDrop 0.7s ease-out;
+        body::before {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(22,131,255,0.07);
+            filter: blur(80px);
+            top: -180px;
+            left: -180px;
+            pointer-events: none;
         }
 
-        header h1 {
-            font-size: 28px;
+        body::after {
+            content: "";
+            position: fixed;
+            width: 450px;
+            height: 450px;
+            border-radius: 50%;
+            background: rgba(217,184,108,0.05);
+            filter: blur(90px);
+            bottom: -180px;
+            right: -150px;
+            pointer-events: none;
+        }
+
+        /* HEADER */
+
+        header {
+            position: relative;
+            z-index: 5;
+            height: 82px;
+            padding: 0 7%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            background: rgba(3,11,25,0.65);
+            backdrop-filter: blur(18px);
+
+            animation: slideDown 0.7s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 18px;
+            font-weight: 900;
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1683ff,
+                    #0754b5
+                );
+
+            box-shadow:
+                0 8px 25px rgba(22,131,255,0.25);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-text strong {
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .brand-text span {
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .header-link {
+            color: #dbe8f8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .header-link:hover {
+            color: #ffffff;
+        }
+
+        /* MAIN */
+
+        .page {
+            min-height: calc(100vh - 82px);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 55px 20px 70px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .register-layout {
+            width: min(1080px, 100%);
+
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+
+            gap: 55px;
+
+            align-items: center;
+        }
+
+        /* LEFT SIDE */
+
+        .intro {
+            animation: fadeLeft 0.8s ease;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 8px 13px;
+
+            border-radius: 30px;
+
+            background: rgba(22,131,255,0.09);
+            border: 1px solid rgba(22,131,255,0.22);
+
+            color: #7fc2ff;
+
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+
+            margin-bottom: 22px;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #39a2ff;
+
+            box-shadow:
+                0 0 12px #1683ff;
+        }
+
+        .intro h1 {
+            font-size: clamp(38px, 5vw, 64px);
+            line-height: 0.98;
+            letter-spacing: -2.5px;
+
+            margin-bottom: 24px;
+        }
+
+        .intro h1 span {
+            color: #4aa9ff;
+        }
+
+        .intro p {
+            color: var(--muted);
+
+            font-size: 16px;
+            line-height: 1.8;
+
+            max-width: 450px;
+        }
+
+        .institution {
+            margin-top: 35px;
+            padding-top: 25px;
+
+            border-top:
+                1px solid rgba(255,255,255,0.1);
+        }
+
+        .institution-title {
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 700;
+
             letter-spacing: 0.5px;
         }
 
+        .institution-location {
+            margin-top: 7px;
 
-        /* ---------------- CONTAINER ---------------- */
+            color: #8498b3;
 
-        .container {
-            max-width: 480px;
-            margin: 60px auto;
-            padding: 20px;
-
-            animation: fadeUp 0.9s ease-out;
+            font-size: 12px;
         }
 
+        /* REGISTER CARD */
 
-        /* ---------------- CARD ---------------- */
+        .card-wrapper {
+            position: relative;
+            animation: fadeRight 0.9s ease;
+        }
+
+        .card-glow {
+            position: absolute;
+
+            inset: -25px;
+
+            background: rgba(22,131,255,0.12);
+
+            filter: blur(45px);
+
+            border-radius: 40px;
+
+            z-index: -1;
+        }
 
         .card {
-            background: white;
+            background: rgba(9,27,52,0.78);
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            border-radius: 26px;
+
             padding: 42px;
-            border-radius: 18px;
 
             box-shadow:
-                0 10px 35px rgba(0, 0, 0, 0.08);
+                0 30px 80px rgba(0,0,0,0.38),
+                inset 0 1px 0 rgba(255,255,255,0.06);
 
-            transition:
-                transform 0.35s ease,
-                box-shadow 0.35s ease;
-
-            animation: cardAppear 0.9s ease-out 0.15s both;
+            backdrop-filter: blur(24px);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-
-            box-shadow:
-                0 18px 45px rgba(0, 0, 0, 0.12);
+        .card-header {
+            margin-bottom: 28px;
         }
 
+        .card-header h2 {
+            font-size: 30px;
+            letter-spacing: -0.7px;
 
-        /* ---------------- HEADING ---------------- */
-
-        h2 {
-            color: #123c69;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 28px;
-
-            animation: fadeUp 0.8s ease-out 0.25s both;
+            margin-bottom: 9px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #667085;
-            margin-bottom: 30px;
+        .card-header p {
+            color: #8fa4bd;
+
+            font-size: 13px;
             line-height: 1.6;
-
-            animation: fadeUp 0.8s ease-out 0.35s both;
         }
 
+        /* ERROR */
 
-        /* ---------------- FORM ---------------- */
+        .error {
+            padding: 13px 15px;
+
+            margin-bottom: 22px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(220,53,69,0.10);
+
+            border:
+                1px solid rgba(220,53,69,0.28);
+
+            color: #ff9da6;
+
+            font-size: 13px;
+
+            animation: shake 0.4s ease;
+        }
+
+        /* FORM */
 
         .field {
             margin-bottom: 20px;
-
-            animation: fadeUp 0.7s ease-out both;
         }
 
-        .field:nth-child(1) {
-            animation-delay: 0.4s;
-        }
-
-        .field:nth-child(2) {
-            animation-delay: 0.5s;
-        }
-
-        .field:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        label {
+        .field label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #344054;
+
+            color: #dce7f5;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            margin-bottom: 9px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 16px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #6f87a5;
+
+            font-size: 16px;
+
+            pointer-events: none;
         }
 
         input {
             width: 100%;
-            padding: 14px;
+            height: 52px;
 
-            border: 1px solid #d0d5dd;
-            border-radius: 9px;
+            padding:
+                0 16px 0 45px;
 
-            font-size: 15px;
-            background: white;
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            outline: none;
+
+            background:
+                rgba(255,255,255,0.045);
+
+            color: white;
+
+            font-size: 14px;
 
             transition:
-                border-color 0.25s ease,
-                box-shadow 0.25s ease,
-                transform 0.2s ease;
+                all 0.25s ease;
+        }
+
+        input::placeholder {
+            color: #647994;
         }
 
         input:hover {
-            border-color: #98a2b3;
+            border-color:
+                rgba(255,255,255,0.22);
+
+            background:
+                rgba(255,255,255,0.06);
         }
 
         input:focus {
-            outline: none;
+            border-color:
+                rgba(22,131,255,0.75);
 
-            border-color: #123c69;
+            background:
+                rgba(22,131,255,0.055);
 
             box-shadow:
-                0 0 0 4px rgba(18, 60, 105, 0.10);
-
-            transform: translateY(-1px);
+                0 0 0 4px rgba(22,131,255,0.10),
+                0 8px 25px rgba(0,0,0,0.12);
         }
 
+        /* OTP INFO */
 
-        /* ---------------- BUTTON ---------------- */
+        .otp-info {
+            margin-top: 3px;
+            margin-bottom: 22px;
+
+            padding: 14px 15px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(22,131,255,0.06);
+
+            border:
+                1px solid rgba(22,131,255,0.13);
+
+            color: #8eacd0;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        .otp-info strong {
+            color: #55afff;
+        }
+
+        /* BUTTON */
 
         button {
             width: 100%;
-            padding: 15px;
+            height: 54px;
+
+            margin-top: 7px;
 
             border: none;
-            border-radius: 9px;
+            border-radius: 12px;
 
-            background: #123c69;
+            background:
+                linear-gradient(
+                    135deg,
+                    #1683ff,
+                    #0861c8
+                );
+
             color: white;
 
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 15px;
+            font-weight: 800;
+
+            letter-spacing: 0.2px;
 
             cursor: pointer;
 
             position: relative;
             overflow: hidden;
 
-            transition:
-                transform 0.2s ease,
-                background 0.25s ease,
-                box-shadow 0.25s ease;
+            box-shadow:
+                0 12px 28px rgba(22,131,255,0.22);
 
-            animation: fadeUp 0.8s ease-out 0.7s both;
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
         }
 
-        button::after {
+        button::before {
             content: "";
 
             position: absolute;
 
             top: 0;
-            left: -100%;
+            left: -120%;
 
-            width: 100%;
+            width: 80%;
             height: 100%;
 
-            background: rgba(255, 255, 255, 0.12);
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,0.22),
+                    transparent
+                );
 
-            transition: left 0.35s ease;
+            transform: skewX(-20deg);
+
+            transition:
+                left 0.6s ease;
         }
 
         button:hover {
-            background: #0d2f52;
-
-            transform: translateY(-3px);
+            transform: translateY(-2px);
 
             box-shadow:
-                0 8px 20px rgba(18, 60, 105, 0.25);
+                0 16px 34px rgba(22,131,255,0.30);
         }
 
-        button:hover::after {
-            left: 100%;
+        button:hover::before {
+            left: 140%;
         }
 
         button:active {
-            transform: scale(0.97);
+            transform:
+                translateY(0) scale(0.99);
         }
 
-
-        /* ---------------- ERROR ---------------- */
-
-        .error {
-            background: #fff0f0;
-            color: #b42318;
-
-            padding: 13px;
-            border-radius: 9px;
-
-            margin-bottom: 20px;
-
-            animation: shake 0.4s ease;
-        }
-
-
-        /* ---------------- LOGIN LINK ---------------- */
+        /* LOGIN */
 
         .login {
             text-align: center;
 
-            margin-top: 27px;
+            margin-top: 25px;
 
-            color: #667085;
+            color: #8194ac;
 
-            animation: fadeIn 0.8s ease-out 0.85s both;
+            font-size: 13px;
         }
 
         .login a {
-            color: #123c69;
+            color: #55afff;
 
-            font-weight: bold;
+            font-weight: 700;
 
             text-decoration: none;
 
-            position: relative;
+            margin-left: 4px;
 
-            transition: color 0.25s ease;
-        }
-
-        .login a::after {
-            content: "";
-
-            position: absolute;
-
-            left: 0;
-            bottom: -3px;
-
-            width: 0;
-            height: 2px;
-
-            background: #123c69;
-
-            transition: width 0.25s ease;
+            transition: 0.25s ease;
         }
 
         .login a:hover {
-            color: #0d2f52;
+            color: white;
         }
 
-        .login a:hover::after {
-            width: 100%;
+        /* SECURITY */
+
+        .security {
+            margin-top: 24px;
+
+            padding: 13px 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+
+            border-radius: 11px;
+
+            background:
+                rgba(255,255,255,0.025);
+
+            border:
+                1px solid rgba(255,255,255,0.07);
+
+            color: #7087a3;
+
+            font-size: 11px;
+
+            text-align: center;
         }
 
+        .security-icon {
+            color: #4eb0ff;
+            font-size: 14px;
+        }
 
-        /* ---------------- ANIMATIONS ---------------- */
+        /* ANIMATIONS */
 
-        @keyframes fadeUp {
+        @keyframes slideDown {
 
             from {
                 opacity: 0;
-                transform: translateY(25px);
+                transform: translateY(-25px);
             }
 
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
-
         }
 
-        @keyframes cardAppear {
+        @keyframes fadeLeft {
 
             from {
                 opacity: 0;
-                transform: translateY(35px) scale(0.97);
+                transform: translateX(-30px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateX(0);
             }
-
         }
 
-        @keyframes headerDrop {
+        @keyframes fadeRight {
 
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateX(30px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
-
-        }
-
-        @keyframes fadeIn {
-
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-
         }
 
         @keyframes shake {
 
-            0% {
+            0%, 100% {
                 transform: translateX(0);
             }
 
@@ -360,159 +660,333 @@
             75% {
                 transform: translateX(-3px);
             }
-
-            100% {
-                transform: translateX(0);
-            }
-
         }
 
+        /* MOBILE */
 
-        /* ---------------- MOBILE ---------------- */
+        @media (max-width: 850px) {
+
+            .register-layout {
+                grid-template-columns: 1fr;
+
+                max-width: 560px;
+
+                gap: 35px;
+            }
+
+            .intro {
+                text-align: center;
+            }
+
+            .intro p {
+                margin: auto;
+            }
+
+            .institution {
+                display: none;
+            }
+
+            .eyebrow {
+                margin-bottom: 17px;
+            }
+
+            .intro h1 {
+                font-size: 45px;
+            }
+        }
 
         @media (max-width: 600px) {
 
             header {
-                padding: 18px 6%;
+                height: 70px;
+                padding: 0 20px;
             }
 
-            header h1 {
-                font-size: 25px;
+            .brand-mark {
+                width: 38px;
+                height: 38px;
             }
 
-            .container {
-                margin: 45px auto;
-                padding: 18px;
+            .brand-text strong {
+                font-size: 18px;
+            }
+
+            .header-link {
+                font-size: 12px;
+            }
+
+            .page {
+                padding:
+                    35px 16px 50px;
+            }
+
+            .intro h1 {
+                font-size: 39px;
+                letter-spacing: -1.8px;
+            }
+
+            .intro p {
+                font-size: 14px;
             }
 
             .card {
-                padding: 30px 22px;
+                padding: 28px 22px;
+                border-radius: 21px;
             }
 
-            h2 {
-                font-size: 25px;
+            .card-header h2 {
+                font-size: 26px;
             }
-
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <header>
 
-    <h1>
-        VeriDoc
-    </h1>
+    <div class="brand">
+
+        <div class="brand-mark">
+            V
+        </div>
+
+        <div class="brand-text">
+
+            <strong>
+                VeriDoc
+            </strong>
+
+            <span>
+                JCER Verification System
+            </span>
+
+        </div>
+
+    </div>
+
+    <a
+        href="/login"
+        class="header-link"
+    >
+        Already registered? Login →
+    </a>
 
 </header>
 
 
-<div class="container">
+<main class="page">
 
+    <div class="register-layout">
 
-    <div class="card">
+        <!-- LEFT SIDE -->
 
+        <section class="intro">
 
-        <h2>
-            Create Account
-        </h2>
+            <div class="eyebrow">
 
+                <span class="eyebrow-dot"></span>
 
-        <p class="subtitle">
-            Register to verify your admission documents
-        </p>
-
-
-        {% if error %}
-
-        <div class="error">
-            {{ error }}
-        </div>
-
-        {% endif %}
-
-
-        <form method="POST">
-
-
-            <div class="field">
-
-                <label>
-                    Full Name
-                </label>
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your full name"
-                    required
-                >
+                Student Registration
 
             </div>
 
 
-            <div class="field">
+            <h1>
 
-                <label>
-                    Email
-                </label>
+                Create your
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    required
-                >
+                <span>
+                    VeriDoc
+                </span>
+
+                account.
+
+            </h1>
+
+
+            <p>
+
+                Register securely using your Gmail address.
+                A one-time verification code will be sent to
+                your email to verify your account.
+
+            </p>
+
+
+            <div class="institution">
+
+                <div class="institution-title">
+
+                    Jain College of Engineering and Research
+
+                </div>
+
+
+                <div class="institution-location">
+
+                    Udyambag, Belagavi, Karnataka
+
+                </div>
 
             </div>
 
+        </section>
 
-            <div class="field">
 
-                <label>
-                    Password
-                </label>
+        <!-- REGISTER CARD -->
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Create a password"
-                    required
+        <section class="card-wrapper">
+
+            <div class="card-glow"></div>
+
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Create Account
+                    </h2>
+
+                    <p>
+                        Enter your name and Gmail address.
+                        We will send you a one-time verification code.
+                    </p>
+
+                </div>
+
+
+                {% if error %}
+
+                <div class="error">
+
+                    {{ error }}
+
+                </div>
+
+                {% endif %}
+
+
+                <form
+                    method="POST"
+                    action="/register"
                 >
+
+                    <!-- NAME -->
+
+                    <div class="field">
+
+                        <label>
+                            Full Name
+                        </label>
+
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                👤
+                            </span>
+
+
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="field">
+
+                        <label>
+                            Gmail Address
+                        </label>
+
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">
+                                ✉
+                            </span>
+
+
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="example@gmail.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OTP INFORMATION -->
+
+                    <div class="otp-info">
+
+                        🔐
+
+                        After clicking
+                        <strong>Create VeriDoc Account</strong>,
+                        a 6-digit OTP will be sent to your Gmail.
+                        Enter that OTP on the next page to complete registration.
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+
+                    <button type="submit">
+
+                        Create VeriDoc Account
+
+                    </button>
+
+                </form>
+
+
+                <div class="login">
+
+                    Already have an account?
+
+                    <a href="/login">
+
+                        Login here
+
+                    </a>
+
+                </div>
+
+
+                <div class="security">
+
+                    <span class="security-icon">
+                        🔐
+                    </span>
+
+                    Your Gmail is used only for secure
+                    VeriDoc account verification.
+
+                </div>
 
             </div>
 
-
-            <button type="submit">
-                Create Account
-            </button>
-
-
-        </form>
-
-
-        <div class="login">
-
-            Already have an account?
-
-            <a href="/login">
-                Login
-            </a>
-
-        </div>
-
+        </section>
 
     </div>
 
-
-</div>
-
+</main>
 
 </body>
-
 </html>

@@ -1,702 +1,210 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>VeriDoc - Verification Status</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
-            min-height: 100vh;
-        }
-
-        header {
-            background: #123c69;
-            color: white;
-            padding: 20px 7%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        header h1 {
-            font-size: 27px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .student-label {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-
-        .logout {
-            color: white;
-            text-decoration: none;
-            padding: 9px 15px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .container {
-            max-width: 1050px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .hero {
-            background: white;
-            border-radius: 22px;
-            padding: 38px;
-            text-align: center;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
-            margin-bottom: 25px;
-        }
-
-        .status-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 36px;
-        }
-
-        .status-icon.pending {
-            background: #fff8e6;
-        }
-
-        .status-icon.approved {
-            background: #eaf8ef;
-        }
-
-        .status-icon.rejected {
-            background: #fff0f0;
-        }
-
-        .hero h2 {
-            color: #123c69;
-            font-size: 30px;
-            margin-bottom: 12px;
-        }
-
-        .hero p {
-            color: #667085;
-            font-size: 15px;
-            line-height: 1.7;
-            max-width: 700px;
-            margin: auto;
-        }
-
-        .notice {
-            margin-top: 20px;
-            padding: 14px 18px;
-            border-radius: 10px;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .notice.pending {
-            background: #fff8e6;
-            border: 1px solid #f3d98b;
-            color: #8a5a00;
-        }
-
-        .notice.approved {
-            background: #eaf8ef;
-            border: 1px solid #b7e4c7;
-            color: #176b3a;
-        }
-
-        .notice.rejected {
-            background: #fff0f0;
-            border: 1px solid #f3b7b3;
-            color: #b42318;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 22px;
-            border-radius: 16px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #123c69;
-            margin-bottom: 6px;
-        }
-
-        .stat-label {
-            color: #667085;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .section {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
-        }
-
-        .section-title {
-            color: #123c69;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .documents {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-        }
-
-        .document {
-            border: 1px solid #e4e7ec;
-            background: #f8fafc;
-            border-radius: 14px;
-            padding: 18px;
-        }
-
-        .document-name {
-            color: #123c69;
-            font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 10px;
-        }
-
-        .document-status {
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .document-status.pending {
-            color: #8a5a00;
-        }
-
-        .document-status.approved {
-            color: #176b3a;
-        }
-
-        .document-status.rejected {
-            color: #b42318;
-        }
-
-        .document-file {
-            color: #667085;
-            font-size: 12px;
-            word-break: break-word;
-        }
-
-        .student-details {
-            margin-top: 25px;
-            background: #f8fafc;
-            border-radius: 14px;
-            padding: 20px;
-            border: 1px solid #e4e7ec;
-        }
-
-        .student-details h3 {
-            color: #123c69;
-            font-size: 17px;
-            margin-bottom: 14px;
-        }
-
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 9px 0;
-            border-bottom: 1px solid #e4e7ec;
-            font-size: 13px;
-        }
-
-        .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: #667085;
-            font-weight: bold;
-        }
-
-        .detail-value {
-            color: #344054;
-            text-align: right;
-        }
-
-        .back-button {
-            display: inline-block;
-            margin-top: 25px;
-            background: #123c69;
-            color: white;
-            text-decoration: none;
-            padding: 13px 22px;
-            border-radius: 9px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .back-button:hover {
-            background: #0d3157;
-        }
-
-        .empty {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 30px;
-            text-align: center;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.07);
-        }
-
-        .empty-icon {
-            font-size: 55px;
-            margin-bottom: 15px;
-        }
-
-        .empty h3 {
-            color: #123c69;
-            margin-bottom: 8px;
-        }
-
-        .empty p {
-            color: #667085;
-            line-height: 1.6;
-        }
-
-        @media (max-width: 750px) {
-
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .documents {
-                grid-template-columns: 1fr;
-            }
-
-            .detail-row {
-                flex-direction: column;
-                gap: 4px;
-            }
-
-            .detail-value {
-                text-align: left;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-<header>
-
-    <h1>VeriDoc</h1>
-
-    <div class="header-right">
-
-        <span class="student-label">
-            Student Verification Portal
-        </span>
-
-        <a
-            href="{{ url_for('logout') }}"
-            class="logout"
-        >
-            Logout
-        </a>
+# ============================================================
+# STUDENT RESULT / SUBMISSION STATUS
+# ============================================================
 
-    </div>
+@app.route("/result")
+def result():
 
-</header>
+    # --------------------------------------------------------
+    # LOGIN REQUIRED
+    # --------------------------------------------------------
 
+    if "user_id" not in session:
 
-<div class="container">
+        flash(
+            "Please login first."
+        )
 
+        return redirect(
+            url_for("login")
+        )
 
-    {% if submissions %}
 
-        {% set first = submissions[0] %}
+    # --------------------------------------------------------
+    # ADMIN -> ADMIN DASHBOARD
+    # --------------------------------------------------------
 
+    if session.get("user_role") == "admin":
 
-        <!-- STATUS -->
+        return redirect(
+            url_for("admin_dashboard")
+        )
 
-        <div class="hero">
 
+    db = get_db()
 
-            {% if approval_status == "APPROVED" %}
 
+    # --------------------------------------------------------
+    # GET LAST SUBMITTED BATCH
+    # --------------------------------------------------------
 
-                <div class="status-icon approved">
-                    ✓
-                </div>
+    batch_id = session.get(
+        "last_batch_id"
+    )
 
-                <h2>
-                    Your Documents Have Been Approved
-                </h2>
 
-                <p>
-                    Your submitted admission documents have
-                    been approved by the college administrator.
-                </p>
+    # --------------------------------------------------------
+    # IF SESSION DOES NOT HAVE BATCH ID,
+    # FIND THE LATEST BATCH FROM DATABASE
+    # --------------------------------------------------------
 
-                <div class="notice approved">
-                    Your VeriDoc admission document submission
-                    has been successfully approved.
-                </div>
+    if not batch_id:
 
+        latest = db.execute("""
+            SELECT batch_id
+            FROM verification_requests
+            WHERE user_id = ?
+              AND batch_id IS NOT NULL
+              AND batch_id != ''
+            ORDER BY id DESC
+            LIMIT 1
+        """, (
+            session["user_id"],
+        )).fetchone()
 
-            {% elif approval_status == "REJECTED" %}
 
+        if latest:
 
-                <div class="status-icon rejected">
-                    ✕
-                </div>
+            batch_id = latest["batch_id"]
 
-                <h2>
-                    Your Documents Were Not Approved
-                </h2>
+            session[
+                "last_batch_id"
+            ] = batch_id
 
-                <p>
-                    Your submission has not been approved by
-                    the college administrator.
-                </p>
 
-                <div class="notice rejected">
-                    Please contact the college admission office
-                    for further information.
-                </div>
+    # --------------------------------------------------------
+    # NO SUBMISSION
+    # --------------------------------------------------------
 
+    if not batch_id:
 
-            {% else %}
+        db.close()
 
+        return render_template(
+            "result.html",
+            submissions=[],
+            approval_status="NONE",
+            approved_count=0,
+            pending_count=0,
+            rejected_count=0,
+            batch_id=None
+        )
 
-                <div class="status-icon pending">
-                    ⏳
-                </div>
 
-                <h2>
-                    Waiting for Approval
-                </h2>
+    # --------------------------------------------------------
+    # GET ALL DOCUMENTS FROM THIS BATCH
+    # --------------------------------------------------------
 
-                <p>
-                    Your documents have been uploaded successfully
-                    and are waiting for review by the college
-                    administrator.
-                </p>
+    submissions = db.execute("""
+        SELECT *
+        FROM verification_requests
+        WHERE user_id = ?
+          AND batch_id = ?
+        ORDER BY id ASC
+    """, (
+        session["user_id"],
+        batch_id
+    )).fetchall()
 
-                <div class="notice pending">
-                    Your submission is currently under review.
-                </div>
 
+    db.close()
 
-            {% endif %}
 
+    # --------------------------------------------------------
+    # DETERMINE OVERALL STATUS
+    # --------------------------------------------------------
 
-        </div>
+    approval_status = "PENDING"
 
 
-        <!-- STATISTICS -->
+    if submissions:
 
-        <div class="stats">
+        statuses = [
+            (
+                row["approval_status"]
+                or "PENDING"
+            ).upper()
+            for row in submissions
+        ]
 
 
-            <div class="stat-card">
+        # ALL APPROVED
 
-                <div class="stat-number">
-                    {{ submissions|length }}
-                </div>
+        if all(
+            status == "APPROVED"
+            for status in statuses
+        ):
 
-                <div class="stat-label">
-                    DOCUMENTS SUBMITTED
-                </div>
+            approval_status = "APPROVED"
 
-            </div>
 
+        # ANY REJECTED
 
-            <div class="stat-card">
+        elif any(
+            status == "REJECTED"
+            for status in statuses
+        ):
 
-                <div class="stat-number">
-                    {{ approved_count }}
-                </div>
+            approval_status = "REJECTED"
 
-                <div class="stat-label">
-                    APPROVED
-                </div>
 
-            </div>
+        # OTHERWISE PENDING
 
+        else:
 
-            <div class="stat-card">
+            approval_status = "PENDING"
 
-                <div class="stat-number">
-                    {{ pending_count }}
-                </div>
 
-                <div class="stat-label">
-                    WAITING FOR APPROVAL
-                </div>
+    # --------------------------------------------------------
+    # COUNTS
+    # --------------------------------------------------------
 
-            </div>
+    approved_count = sum(
+        1
+        for row in submissions
+        if (
+            row["approval_status"]
+            or "PENDING"
+        ).upper() == "APPROVED"
+    )
 
 
-        </div>
+    pending_count = sum(
+        1
+        for row in submissions
+        if (
+            row["approval_status"]
+            or "PENDING"
+        ).upper() == "PENDING"
+    )
 
 
-        <!-- DOCUMENTS -->
+    rejected_count = sum(
+        1
+        for row in submissions
+        if (
+            row["approval_status"]
+            or "PENDING"
+        ).upper() == "REJECTED"
+    )
 
-        <div class="section">
 
+    # --------------------------------------------------------
+    # SEND CORRECT VARIABLES TO RESULT.HTML
+    # --------------------------------------------------------
 
-            <h3 class="section-title">
-                Submitted Admission Documents
-            </h3>
+    return render_template(
+        "result.html",
 
+        submissions=submissions,
 
-            <div class="documents">
+        approval_status=approval_status,
 
+        approved_count=approved_count,
 
-                {% for document in submissions %}
+        pending_count=pending_count,
 
+        rejected_count=rejected_count,
 
-                    <div class="document">
-
-
-                        <div class="document-name">
-                            {{ document.certificate_type }}
-                        </div>
-
-
-                        {% if document.approval_status == "APPROVED" %}
-
-                            <div class="document-status approved">
-                                ✓ APPROVED
-                            </div>
-
-
-                        {% elif document.approval_status == "REJECTED" %}
-
-                            <div class="document-status rejected">
-                                ✕ NOT APPROVED
-                            </div>
-
-
-                        {% else %}
-
-                            <div class="document-status pending">
-                                ⏳ WAITING FOR APPROVAL
-                            </div>
-
-                        {% endif %}
-
-
-                        <div class="document-file">
-                            {{ document.filename }}
-                        </div>
-
-
-                    </div>
-
-
-                {% endfor %}
-
-
-            </div>
-
-
-            <!-- STUDENT DETAILS -->
-
-            <div class="student-details">
-
-
-                <h3>
-                    Student Details
-                </h3>
-
-
-                <div class="detail-row">
-
-                    <span class="detail-label">
-                        Name as per 10th / SSLC
-                    </span>
-
-                    <span class="detail-value">
-                        {{ first.full_name }}
-                    </span>
-
-                </div>
-
-
-                <div class="detail-row">
-
-                    <span class="detail-label">
-                        Date of Birth
-                    </span>
-
-                    <span class="detail-value">
-                        {{ first.dob }}
-                    </span>
-
-                </div>
-
-
-                <div class="detail-row">
-
-                    <span class="detail-label">
-                        12th / PUC Register Number
-                    </span>
-
-                    <span class="detail-value">
-                        {{ first.roll_number }}
-                    </span>
-
-                </div>
-
-
-                <div class="detail-row">
-
-                    <span class="detail-label">
-                        Passing Year
-                    </span>
-
-                    <span class="detail-value">
-                        {{ first.passing_year }}
-                    </span>
-
-                </div>
-
-
-                <div class="detail-row">
-
-                    <span class="detail-label">
-                        Board
-                    </span>
-
-                    <span class="detail-value">
-                        {{ first.board }}
-                    </span>
-
-                </div>
-
-
-                <div class="detail-row">
-
-                    <span class="detail-label">
-                        Submitted On
-                    </span>
-
-                    <span class="detail-value">
-                        {{ first.created_at }}
-                    </span>
-
-                </div>
-
-
-            </div>
-
-
-            <a
-                href="{{ url_for('home') }}"
-                class="back-button"
-            >
-                Back to Home
-            </a>
-
-
-        </div>
-
-
-    {% else %}
-
-
-        <div class="empty">
-
-            <div class="empty-icon">
-                📂
-            </div>
-
-            <h3>
-                No Submission Found
-            </h3>
-
-            <p>
-                No document submission was found for your account.
-            </p>
-
-            <a
-                href="{{ url_for('verify') }}"
-                class="back-button"
-            >
-                Upload Documents
-            </a>
-
-        </div>
-
-
-    {% endif %}
-
-
-</div>
-
-
-{% if approval_status == "PENDING" %}
-
-<script>
-
-    setTimeout(function () {
-        window.location.reload();
-    }, 5000);
-
-</script>
-
-{% endif %}
-
-
-</body>
-
-</html>
+        batch_id=batch_id
+    )
